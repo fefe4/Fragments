@@ -1,0 +1,59 @@
+body{
+    background-color: rgb(6, 6, 68);    
+    color:whitesmoke;
+    margin:0;
+}
+
+main{
+    display:flex;
+    justify-content: center;
+    height:100vh;
+    align-items: center;
+    flex-direction: column;
+}
+
+form{
+    display:flex;
+    flex-direction: column;
+    font-size: 6vh;
+    margin-left: 10%;
+    margin-right: 10%;
+    width:40vh
+}
+
+input, label{
+    font-size: 4vh;
+    margin: 1vh;
+    text-align: center;
+    /* border-radius: 1000px; */
+    font-family: sans-serif;
+    background-color: rgb(6, 6, 68);
+    color:whitesmoke;
+    border-color:#DDDDDD;
+    
+}
+
+input {
+    border-style: solid;
+}
+
+input:hover{
+    color:#DDDDDD;
+    border-color:#DDDDDD;
+    }
+
+#submit{
+    border-width: 4px;
+}
+
+div{
+    display:flex;
+    flex-direction: row;
+}
+
+.formbets{
+    margin-left:2%;
+    margin-right:2%;
+    width:30%
+}
+
