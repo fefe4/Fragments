@@ -1,113 +1,12 @@
 let wallet;
+let time = Math.round(Date.now() / 1000)
+console.log(time)
+
 
 function getWallet() {
   const user = document.getElementById("user");
   wallet = user.textContent;
 }
-
-function giveFefeMoney1 () {
-  brrr(1)
-}
-
-function giveFefeMoney10 () {
-  brrr(10)
-}
-
-function giveFefeMoney100 () {
-  brrr(100)
-}
-
-function brrr(quantity) {
-  let json_payload = {
-    contractName: "tokens",
-    contractAction: "transfer",
-    contractPayload: {
-      symbol: "FRAG",
-      to: "fefe99",
-      quantity: "" + quantity,
-      memo: "Im testing stuff",
-    },
-  };
-
-  json_payload = JSON.stringify(json_payload);
-
-  hive_keychain.requestCustomJson(
-    wallet,
-    "ssc-testnet-hive",
-    "Active",
-    json_payload,
-    "blablabla testing"
-  );
-}
-
-function changeInterface() {
-  const login = document.getElementById("login");
-  login.remove();
-  secondInterface();
-}
-
-
-
-function secondInterface() {
-  const main = document.getElementById("main");
-  const div = document.createElement("div");
-  const p = document.createElement("p");
-  p.textContent = "then, try your luck";
-  const form1 = document.createElement("form");
-  const form10 = document.createElement("form");
-  const form100 = document.createElement("form");
-  const label1 = document.createElement("label");
-  label1.textContent ="pay 1 token get 1% chance";
-  const label10 = document.createElement("label");
-  label10.textContent = "pay 10 token get 10% chance";
-  const label100 = document.createElement("label");
-  label100.textContent = "pay 100 token get 100% chance";
-  const input1 = document.createElement("input");
-  const input10 = document.createElement("input");
-  const input100 = document.createElement("input");
-  input1.setAttribute("type", "submit");
-  input10.setAttribute("type", "submit");
-  input100.setAttribute("type", "submit");
-  form1.append(label1);
-  form10.append(label10);
-  form100.append(label100);
-  form1.append(input1);
-  form10.append(input10);
-  form100.append(input100);
-
-  form1.classList.add('formbets')
-  form10.classList.add('formbets')
-  form100.classList.add('formbets')
-  main.append(p);
-  div.append(form1);
-  div.append(form10);
-  div.append(form100);
-  main.append(div);
-
-  
-  form1.addEventListener("submit", function (e) {
-    e.preventDefault();
-    giveFefeMoney1();
-    sendReward();
-  });
-  // form10.addEventListener("submit")
-  // form1.action =
-  // form10.action = 
-  // form100.action = 
-}
-
-
-async function sendReward () {
-  const response = await fetch("http://localhost:8000/createNFT", {
-    method: "POST",
-    mode: "no-cors",
-    headers: { "Content-type": "application/json" },
-    body: JSON.stringify({
-      "user":wallet
-    }),
-  });
-}
-
 function checkKeychain() {
   if (typeof hive_keychain === "undefined") {
     console.log("3");
@@ -127,9 +26,203 @@ function checkKeychain() {
 }
 const myTimeout = setTimeout(checkKeychain, 1000);
 
-/* <input type="submit" value="WHERE IS IT?" id="submit"> */
+function changeInterface() {
+  const login = document.getElementById("login");
+  login.remove();
+  secondInterface();
+}
+
+async function secondInterface() {
+  const main = document.getElementById("main");
+  const div = document.createElement("div");
+  const p = document.createElement("p");
+  p.textContent = "then, try your luck";
+  const form1 = document.createElement("form");
+  const form10 = document.createElement("form");
+  const form100 = document.createElement("form");
+  const label1 = document.createElement("label");
+  label1.textContent ="1% chance";
+  const label10 = document.createElement("label");
+  label10.textContent = "10% chance";
+  const label100 = document.createElement("label");
+  label100.textContent = "100% chance";
+  const input1 = document.createElement("input");
+  const input10 = document.createElement("input");
+  const input100 = document.createElement("input");
+  input1.setAttribute("type", "submit");
+  input10.setAttribute("type", "submit");
+  input100.setAttribute("type", "submit");
+  form1.append(label1);
+  form10.append(label10);
+  form100.append(label100);
+  form1.append(input1);
+  form10.append(input10);
+  form100.append(input100);
+
+  form1.classList.add('formbets')
+  form10.classList.add('formbets')
+  form100.classList.add('formbets')
+
+  const counter = document.createElement("p");
+  counter.id = "counter"
+  counter.textContent = "0";
+  const lastTransaction = await findTransactions(wallet)
+  console.log(lastTransaction)
+  let timeleft = lastTransaction - time + 3600;
+  if (timeleft < 0) {
+    counterContent = "You can try to claim an NFT now!"
+    counter.textContent = `${counterContent}`
+  }
+  else{  
+  counter.textContent = `you can claim again in  and ${timeleft} seconds`
+  }
+ 
+  
+  
+  
+  
+  main.append(p);
+  div.append(form1);
+  div.append(form10);
+  div.append(form100);
+  main.append(div);
+  main.append(counter)
+  
+  form1.addEventListener("submit", function (e) {
+    e.preventDefault();
+    sendReward();
+  });
+  form10.addEventListener("submit", function (e) {
+    e.preventDefault();
+    sendReward10();
+  });
+  form100.addEventListener("submit", function (e) {
+    e.preventDefault();
+    sendReward100();
+  });
+  
+    const x = setInterval(function() {
+    counter.textContent = `you can claim again in  and ${timeleft} seconds`
+    timeleft--
+    if (timeleft< 0) {
+      clearInterval(x);
+      counterContent = "You can try to claim an NFT now!"
+      counter.textContent = `${counterContent}`
+    }
+  }, 1000);
+  
+  
+  // form10.addEventListener("submit")
+  // form1.action =
+  // form10.action = 
+  // form100.action = 
+}
+
+// function startInterval(timeleft, counter){
+//   while (timeleft>0){
+//   setTimeout(() => {
+//     timeleft === timeleft--
+//   }, 1000)
+//     console.log("3")
+//     counter.textContent = `you can claim again in ${timeleft%3600}mins ${timeleft%60} seconds`
+//   }
+// }
+
+async function findTransactions(wallet) {
+  let i = 0;
+  let tokenData = [];
+  while (tokenData.length % 500 === 0) {
+    const response = await fetch(
+      `https://accounts.hive-engine.com/accountHistory?account=fefe.dev&ops=tokens_transfer&symbol=BUDS`
+    );
+    const data = await response.json(); 
+    console.log(data);
+    tokenData = tokenData.concat(data);
+    i = i + 500;
+    if (data.length < 500) {
+      // if (true) {
+      break;
+    }
+  }
+  
+  tokenData = tokenData.filter((v) => v.to === wallet);
+  tokenData = tokenData.filter((v) => v.memo === "better luck next time"  ||  "congratulations, you won an NFT");
+  tokenData = tokenData.filter((v) => v.from === "fefe.dev");
+  // console.log(typeof(tokenData[0].timestamp));
+  if (tokenData ) {
+    return 0;
+  }
+  return(Math.round(tokenData[0].timestamp))
+}
+
+async function sendReward () {
+    await fetch("https://safe-tor-86739.herokuapp.com/createNFT", {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-type": "application/json" },
+    body: JSON.stringify({
+      "user":wallet
+    }),
+  });
+}
+
+async function sendReward10 () {
+  await fetch("https://safe-tor-86739.herokuapp.com/createNFT10", {
+  method: "POST",
+  mode: "no-cors",
+  headers: { "Content-type": "application/json" },
+  body: JSON.stringify({
+    "user":wallet
+  }),
+});
+}
+async function sendReward () {
+  await fetch("https://safe-tor-86739.herokuapp.com/createNFT100", {
+  method: "POST",
+  mode: "no-cors",
+  headers: { "Content-type": "application/json" },
+  body: JSON.stringify({
+    "user":wallet
+  }),
+});
+}
 
 const login = document.getElementById("login");
   login.addEventListener("submit", function (e) {
     e.preventDefault();
   });
+
+  // function giveFefeMoney1 () {
+//   brrr(1)
+// }
+
+// function giveFefeMoney10 () {
+//   brrr(10)
+// }
+
+// function giveFefeMoney100 () {
+//   brrr(100)
+// }
+
+// function brrr(quantity) {
+//   let json_payload = {
+//     contractName: "tokens",
+//     contractAction: "transfer",
+//     contractPayload: {
+//       symbol: "BUDS",
+//       to: "fefe99",
+//       quantity: "" + quantity,
+//       memo: "1 buds for 1/100th chance",
+//     },
+//   };
+
+//   json_payload = JSON.stringify(json_payload);
+
+//   hive_keychain.requestCustomJson(
+//     wallet,
+//     "ssc-testnet-hive",
+//     "Active",
+//     json_payload,
+//     "blablabla testing"
+//   );
+// }
