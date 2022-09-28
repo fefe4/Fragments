@@ -63,7 +63,7 @@ async function secondInterface() {
   form1.classList.add("formbets");
   form10.classList.add("formbets");
   form100.classList.add("formbets");
-  
+
   const counter = document.createElement("p");
   counter.id = "counter";
   counter.textContent = "0";
@@ -86,23 +86,20 @@ async function secondInterface() {
 
   form1.addEventListener("submit", function (e) {
     e.preventDefault();
-    openForm()
+    openForm();
     sendReward();
   });
   form10.addEventListener("submit", function (e) {
     e.preventDefault();
-    openForm()
+    openForm();
 
     sendReward10();
-
   });
   form100.addEventListener("submit", function (e) {
     e.preventDefault();
-    openForm()
+    openForm();
 
     sendReward100();
-  
-
   });
 
   const x = setInterval(function () {
@@ -148,7 +145,7 @@ async function findTransactions(wallet) {
     }
   }
 
-  // tokenData = tokenData.filter((v) => v.to === wallet);
+  tokenData = tokenData.filter((v) => v.to === wallet);
   tokenData = tokenData.filter(
     (v) =>
       v.memo === ("better luck next time" || "congratulations, you won an NFT")
@@ -164,8 +161,7 @@ async function findTransactions(wallet) {
 }
 
 async function sendReward() {
-
-
+  console.log(wallet);
 
   const response = await fetch(
     "https://safe-tor-86739.herokuapp.com/createNFT",
@@ -181,38 +177,31 @@ async function sendReward() {
 
   const rewardsParagraph = document.getElementById("rewards");
   rewardsParagraph.textContent = data;
-
- 
 }
 
 async function sendReward10() {
   const rewardsParagraph = document.getElementById("rewards");
   await fetch("https://safe-tor-86739.herokuapp.com/createNFT10", {
     method: "POST",
-    mode: "no-cors",
     headers: { "Content-type": "application/json" },
     body: JSON.stringify({
-      user: wallet,
+      user: `${wallet}`,
     }),
-
   });
   console.log(response);
 
   const data = await response.text();
   console.log(data);
-  
+
   rewardsParagraph.textContent = data;
 }
 async function sendReward100() {
-  
   await fetch("https://safe-tor-86739.herokuapp.com/createNFT100", {
     method: "POST",
-    mode: "no-cors",
     headers: { "Content-type": "application/json" },
     body: JSON.stringify({
-      user: wallet,
+      user: `${wallet}`,
     }),
-    
   });
   console.log(response);
 
