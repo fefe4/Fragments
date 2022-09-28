@@ -1,12 +1,14 @@
-let wallet;
-let time = Math.round(Date.now() / 1000)
-console.log(time)
+var wallet;
+let time = Math.round(Date.now() / 1000);
+console.log(time);
 
+user.addEventListener("change", getWallet);
 
 function getWallet() {
   const user = document.getElementById("user");
-  wallet = user.textContent;
+  wallet = user.value;
 }
+
 function checkKeychain() {
   if (typeof hive_keychain === "undefined") {
     console.log("3");
@@ -20,7 +22,6 @@ function checkKeychain() {
     join.setAttribute("type", "submit");
     join.setAttribute("value", "WHERE IS IT?");
     login.append(join);
-    join.addEventListener("click", getWallet);
     join.addEventListener("click", changeInterface);
   }
 }
@@ -41,7 +42,7 @@ async function secondInterface() {
   const form10 = document.createElement("form");
   const form100 = document.createElement("form");
   const label1 = document.createElement("label");
-  label1.textContent ="1% chance";
+  label1.textContent = "1% chance";
   const label10 = document.createElement("label");
   label10.textContent = "10% chance";
   const label100 = document.createElement("label");
@@ -59,63 +60,65 @@ async function secondInterface() {
   form10.append(input10);
   form100.append(input100);
 
-  form1.classList.add('formbets')
-  form10.classList.add('formbets')
-  form100.classList.add('formbets')
-
+  form1.classList.add("formbets");
+  form10.classList.add("formbets");
+  form100.classList.add("formbets");
+  
   const counter = document.createElement("p");
-  counter.id = "counter"
+  counter.id = "counter";
   counter.textContent = "0";
-  const lastTransaction = await findTransactions(wallet)
-  console.log(lastTransaction)
+  const lastTransaction = await findTransactions(wallet);
+  console.log(lastTransaction);
   let timeleft = lastTransaction - time + 3600;
   if (timeleft < 0) {
-    counterContent = "You can try to claim an NFT now!"
-    counter.textContent = `${counterContent}`
+    counterContent = "You can try to claim an NFT now!";
+    counter.textContent = `${counterContent}`;
+  } else {
+    counter.textContent = `you can claim again in  and ${timeleft} seconds`;
   }
-  else{  
-  counter.textContent = `you can claim again in  and ${timeleft} seconds`
-  }
- 
-  
-  
-  
-  
+
   main.append(p);
   div.append(form1);
   div.append(form10);
   div.append(form100);
   main.append(div);
-  main.append(counter)
-  
+  main.append(counter);
+
   form1.addEventListener("submit", function (e) {
     e.preventDefault();
+    openForm()
     sendReward();
   });
   form10.addEventListener("submit", function (e) {
     e.preventDefault();
+    openForm()
+
     sendReward10();
+
   });
   form100.addEventListener("submit", function (e) {
     e.preventDefault();
+    openForm()
+
     sendReward100();
-  });
   
-    const x = setInterval(function() {
-    counter.textContent = `you can claim again in  and ${timeleft} seconds`
-    timeleft--
-    if (timeleft< 0) {
+
+  });
+
+  const x = setInterval(function () {
+    counter.textContent = `you can claim again in  and ${timeleft} seconds`;
+    timeleft--;
+    if (timeleft < 0) {
       clearInterval(x);
-      counterContent = "You can try to claim an NFT now!"
-      counter.textContent = `${counterContent}`
+      counterContent = "You can try to claim an NFT now!";
+      counter.textContent = `${counterContent}`;
     }
   }, 1000);
-  
-  
+
   // form10.addEventListener("submit")
   // form1.action =
-  // form10.action = 
-  // form100.action = 
+  // form10.action =
+  // form100.action =
 }
 
 // function startInterval(timeleft, counter){
@@ -135,7 +138,7 @@ async function findTransactions(wallet) {
     const response = await fetch(
       `https://accounts.hive-engine.com/accountHistory?account=fefe.dev&ops=tokens_transfer&symbol=BUDS`
     );
-    const data = await response.json(); 
+    const data = await response.json();
     console.log(data);
     tokenData = tokenData.concat(data);
     i = i + 500;
@@ -144,55 +147,79 @@ async function findTransactions(wallet) {
       break;
     }
   }
-  
-  tokenData = tokenData.filter((v) => v.to === wallet);
-  tokenData = tokenData.filter((v) => v.memo === "better luck next time"  ||  "congratulations, you won an NFT");
+
+  // tokenData = tokenData.filter((v) => v.to === wallet);
+  tokenData = tokenData.filter(
+    (v) =>
+      v.memo === ("better luck next time" || "congratulations, you won an NFT")
+  );
   tokenData = tokenData.filter((v) => v.from === "fefe.dev");
+  console.log(tokenData);
   // console.log(typeof(tokenData[0].timestamp));
-  if (tokenData ) {
+
+  if (tokenData.length === 0) {
     return 0;
   }
-  return(Math.round(tokenData[0].timestamp))
+  return Math.round(tokenData[0].timestamp);
 }
 
-async function sendReward () {
-    await fetch("https://safe-tor-86739.herokuapp.com/createNFT", {
+async function sendReward() {
+  const rewardsParagraph = document.getElementById("rewards");
+
+
+
+  const response = await fetch(
+    "https://safe-tor-86739.herokuapp.com/createNFT",
+    {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({
+        user: `${wallet}`,
+      }),
+    }
+  );
+  console.log(response);
+
+  const data = await response.text();
+  console.log(data);
+  rewardsParagraph.textContent = data;
+ 
+}
+
+async function sendReward10() {
+  await fetch("https://safe-tor-86739.herokuapp.com/createNFT10", {
     method: "POST",
     mode: "no-cors",
     headers: { "Content-type": "application/json" },
     body: JSON.stringify({
-      "user":wallet
+      user: wallet,
+    }),
+  });
+}
+async function sendReward100() {
+  await fetch("https://safe-tor-86739.herokuapp.com/createNFT100", {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-type": "application/json" },
+    body: JSON.stringify({
+      user: wallet,
     }),
   });
 }
 
-async function sendReward10 () {
-  await fetch("https://safe-tor-86739.herokuapp.com/createNFT10", {
-  method: "POST",
-  mode: "no-cors",
-  headers: { "Content-type": "application/json" },
-  body: JSON.stringify({
-    "user":wallet
-  }),
-});
-}
-async function sendReward () {
-  await fetch("https://safe-tor-86739.herokuapp.com/createNFT100", {
-  method: "POST",
-  mode: "no-cors",
-  headers: { "Content-type": "application/json" },
-  body: JSON.stringify({
-    "user":wallet
-  }),
-});
-}
-
 const login = document.getElementById("login");
-  login.addEventListener("submit", function (e) {
-    e.preventDefault();
-  });
+login.addEventListener("submit", function (e) {
+  e.preventDefault();
+});
 
-  // function giveFefeMoney1 () {
+function closeForm() {
+  document.getElementById("popup").style.display = "none";
+}
+
+function openForm() {
+  document.getElementById("popup").style.display = "block";
+}
+// function giveFefeMoney1 () {
 //   brrr(1)
 // }
 

@@ -15,11 +15,14 @@
 
     <main id="main">
         <form id="login" >
-        <label for="user">Try your luck to get a NFT</label>
-        <input type="text" id="user" name="user" placeholder="your username"></input>
-        <label id="install">To get a free NFT you must install <a href="https://chrome.google.com/webstore/detail/hive-keychain/jcacnejopjdphbnjgfaaobbfafkihpep">Hive-keychain first</a></label>
-    </form>
+            <label for="user">Try your luck to get a NFT</label>
+            <input type="text" id="user" name="user" placeholder="your username"></input>
+            <label id="install">To get a free NFT you must install <a href="https://chrome.google.com/webstore/detail/hive-keychain/jcacnejopjdphbnjgfaaobbfafkihpep">Hive-keychain first</a></label>
+        </form>
+        <div id="popup" class="popup">
+            <p id="rewards">Our monkeys are processing your transaction</p>
+            <button onclick="closeForm()">Close</button>
+        </div>
     </main>
-    
 </body>
 </html>

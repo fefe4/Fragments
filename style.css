@@ -35,11 +35,14 @@ input, label{
 
 input {
     border-style: solid;
+    border-radius: 10px;
+
 }
 
 input:hover{
     color:#DDDDDD;
-    border-color:#DDDDDD;
+    border-color:#208d88;
+    border-width: 4px;
     }
 
 #submit{
@@ -57,3 +60,33 @@ div{
     width:30%
 }
 
+.popup{
+    display:none;
+    position: fixed;
+    margin:5% auto;
+    width:70%;
+    height:40%;
+    border-radius: 5px;
+    border: 3px solid #208d88;
+    z-index: 9;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    color: rgb(6, 6, 68);
+    
+}
+
+.popup p{
+    font-size:3vh;
+    position: absolute;
+    left: 53%;
+    top:30%;
+    transform: translateX(-50%);
+}
+
+.popup button {
+    background-color: red;
+    position:absolute;
+    top:2%;
+    right:2%;
+  }
