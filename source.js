@@ -164,7 +164,6 @@ async function findTransactions(wallet) {
 }
 
 async function sendReward() {
-  const rewardsParagraph = document.getElementById("rewards");
 
 
 
@@ -178,6 +177,10 @@ async function sendReward() {
       }),
     }
   );
+  const data = await response.text();
+
+  const rewardsParagraph = document.getElementById("rewards");
+  rewardsParagraph.textContent = data;
 
  
 }
@@ -197,10 +200,11 @@ async function sendReward10() {
 
   const data = await response.text();
   console.log(data);
+  
   rewardsParagraph.textContent = data;
 }
 async function sendReward100() {
-  const rewardsParagraph = document.getElementById("rewards");
+  
   await fetch("https://safe-tor-86739.herokuapp.com/createNFT100", {
     method: "POST",
     mode: "no-cors",
@@ -214,6 +218,7 @@ async function sendReward100() {
 
   const data = await response.text();
   console.log(data);
+  const rewardsParagraph = document.getElementById("rewards");
   rewardsParagraph.textContent = data;
 }
 
