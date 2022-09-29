@@ -133,7 +133,7 @@ async function findTransactions(wallet) {
   let tokenData = [];
   while (tokenData.length % 500 === 0) {
     const response = await fetch(
-      `https://accounts.hive-engine.com/accountHistory?account=fefe.dev&ops=tokens_transfer&symbol=BUDS`
+      `https://enginehistory.rishipanthee.com/accountHistory?account=fefe.dev&ops=tokens_transfer&symbol=BUDS`
     );
     const data = await response.json();
     console.log(data);
@@ -146,11 +146,16 @@ async function findTransactions(wallet) {
   }
 
   tokenData = tokenData.filter((v) => v.to === wallet);
-  tokenData = tokenData.filter(
-    (v) =>
-      v.memo === ("better luck next time" || "congratulations, you won an NFT")
-  );
   tokenData = tokenData.filter((v) => v.from === "fefe.dev");
+//   tokenData1 = tokenData.filter(
+//     (v) =>
+//       v.memo === "better luck next time" );
+
+//       tokenData2 = tokenData.filter(
+//         (v) =>
+//           v.memo === "congratulations, you won an NFT" );
+      
+//  tokenData = tokenData2.concat(tokenData1)
   console.log(tokenData);
   // console.log(typeof(tokenData[0].timestamp));
 
@@ -162,7 +167,6 @@ async function findTransactions(wallet) {
 
 async function sendReward() {
   console.log(wallet);
-
   const response = await fetch(
     "https://safe-tor-86739.herokuapp.com/createNFT",
     {
@@ -174,39 +178,39 @@ async function sendReward() {
     }
   );
   const data = await response.text();
-
   const rewardsParagraph = document.getElementById("rewards");
   rewardsParagraph.textContent = data;
 }
 
 async function sendReward10() {
-  const rewardsParagraph = document.getElementById("rewards");
-  await fetch("https://safe-tor-86739.herokuapp.com/createNFT10", {
-    method: "POST",
-    headers: { "Content-type": "application/json" },
-    body: JSON.stringify({
-      user: `${wallet}`,
-    }),
-  });
-  console.log(response);
-
+  console.log(wallet);
+  const response = await fetch(
+    "https://safe-tor-86739.herokuapp.com/createNFT10",
+    {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({
+        user: `${wallet}`,
+      }),
+    }
+  );
   const data = await response.text();
-  console.log(data);
-
+  const rewardsParagraph = document.getElementById("rewards");
   rewardsParagraph.textContent = data;
 }
 async function sendReward100() {
-  await fetch("https://safe-tor-86739.herokuapp.com/createNFT100", {
-    method: "POST",
-    headers: { "Content-type": "application/json" },
-    body: JSON.stringify({
-      user: `${wallet}`,
-    }),
-  });
-  console.log(response);
-
+  console.log(wallet);
+  const response = await fetch(
+    "https://safe-tor-86739.herokuapp.com/createNFT100",
+    {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({
+        user: `${wallet}`,
+      }),
+    }
+  );
   const data = await response.text();
-  console.log(data);
   const rewardsParagraph = document.getElementById("rewards");
   rewardsParagraph.textContent = data;
 }
